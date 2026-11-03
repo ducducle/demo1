@@ -3,32 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Trạm Tụ Khí - Sunlit Focus</title>
+    <title>Trạm Tụ Khí V2 - Animated Focus</title>
     <style>
         :root {
-            --bg-color: #fdf6e3; /* Màu nắng ấm */
+            /* Hình nền Căn phòng Lofi Chill */
+            --bg-image: url('https://i.pinimg.com/originals/80/f7/e5/80f7e50303666d691eb216ca88a53160.gif'); 
+            --box-bg: rgba(255, 255, 255, 0.9);
             --text-color: #5c4b37;
             --accent: #f39c12;
-            --box-bg: rgba(255, 255, 255, 0.85);
-            --shadow: 0 4px 15px rgba(0,0,0,0.05);
-            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-main: 'Segoe UI', Tahoma, sans-serif;
         }
 
-        /* Chế độ Tu Tiên / Boss Mode */
+        /* Chế độ Tu Tiên (Boss Mode) */
         body.tu-tien-mode {
-            --bg-color: #0d1117; /* Đêm đen huyền bí */
-            --text-color: #e6edf3;
-            --accent: #ff3366; /* Đỏ rực */
-            --box-bg: rgba(22, 27, 34, 0.9);
-            --shadow: 0 0 20px rgba(255, 51, 102, 0.4);
+            /* Hình nền Sấm sét / Lỗ đen */
+            --bg-image: url('https://i.gifer.com/4N3a.gif'); 
+            --box-bg: rgba(10, 10, 15, 0.85);
+            --text-color: #00ffcc; /* Cyan Neon */
+            --accent: #ff3366;
             --font-main: 'Courier New', Courier, monospace;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: var(--text-color);
             font-family: var(--font-main);
-            transition: all 0.6s ease;
+            transition: background-image 0.5s ease-in-out;
             margin: 0; padding: 20px;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
@@ -36,115 +39,123 @@
 
         .container {
             background: var(--box-bg);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
+            padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             width: 100%; max-width: 500px;
-            transition: all 0.6s ease;
-            position: relative;
-            overflow: hidden;
+            backdrop-filter: blur(5px);
+            position: relative; overflow: hidden;
+            margin-top: 20px;
         }
 
-        h2 { margin-top: 0; display: flex; justify-content: space-between; align-items: center; }
+        /* Hiệu ứng trôi nổi cho các thành phần */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .stats { 
+            display: flex; gap: 15px; font-weight: bold; 
+            background: rgba(0,0,0,0.7); color: gold; 
+            padding: 10px 20px; border-radius: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h2 { margin-top: 0; border-bottom: 2px dashed var(--accent); padding-bottom: 10px;}
         
-        .sunbeam {
-            position: absolute; top: -50px; left: -50px;
-            width: 200px; height: 200px;
-            background: radial-gradient(circle, rgba(243,156,18,0.15) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%; z-index: 0;
-            display: block;
-        }
-        body.tu-tien-mode .sunbeam { display: none; }
-
-        /* Hố đen ý tưởng */
-        .input-group { position: relative; z-index: 1; display: flex; gap: 10px; margin-bottom: 20px; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
         input[type="text"] {
-            flex: 1; padding: 12px 15px; border-radius: 10px;
-            border: 1px solid #ddd; outline: none;
-            background: transparent; color: var(--text-color);
-            font-family: var(--font-main); transition: all 0.3s;
+            flex: 1; padding: 12px; border-radius: 10px; border: none;
+            background: rgba(0,0,0,0.1); color: inherit; font-weight: bold;
+            outline: none; font-family: inherit;
         }
-        body.tu-tien-mode input[type="text"] { border-color: var(--accent); }
+        body.tu-tien-mode input[type="text"] { background: rgba(255,255,255,0.1); color: #fff;}
         
         button {
             padding: 12px 20px; border: none; border-radius: 10px;
             background: var(--accent); color: #fff; cursor: pointer;
-            font-weight: bold; transition: all 0.3s;
+            font-weight: bold; transition: transform 0.2s;
         }
         button:hover { transform: scale(1.05); }
 
-        /* Danh sách việc */
-        .task-list { list-style: none; padding: 0; margin: 0; position: relative; z-index: 1; }
+        .task-list { list-style: none; padding: 0; margin: 0; }
         .task-item {
-            background: rgba(0,0,0,0.03); padding: 15px; margin-bottom: 10px;
+            background: rgba(0,0,0,0.05); padding: 15px; margin-bottom: 10px;
             border-radius: 10px; display: flex; justify-content: space-between;
-            align-items: center; cursor: pointer; border-left: 4px solid transparent;
+            align-items: center; border-left: 4px solid var(--accent);
         }
-        .task-item:hover { border-left-color: var(--accent); background: rgba(0,0,0,0.06); }
-        body.tu-tien-mode .task-item { background: rgba(255,255,255,0.05); }
+        body.tu-tien-mode .task-item { background: rgba(255,255,255,0.1); }
 
-        .btn-tutien {
-            background: #2c3e50; font-size: 0.85em; padding: 6px 12px; border-radius: 5px;
-        }
+        .btn-tutien { background: #e74c3c; box-shadow: 0 0 10px #e74c3c; animation: float 2s infinite; }
         body.tu-tien-mode .btn-tutien { display: none; }
 
-        /* Màn hình Focus Mode */
-        #focus-screen { display: none; text-align: center; position: relative; z-index: 1; }
-        .timer { font-size: 3em; font-weight: bold; margin: 20px 0; color: var(--accent); text-shadow: 0 0 10px var(--accent); }
-        .btn-exit { background: transparent; border: 1px solid var(--text-color); color: var(--text-color); }
-        
-        /* Stats */
-        .stats { display: flex; gap: 15px; font-weight: bold; margin-bottom: 15px; }
+        /* Màn hình Đếm ngược */
+        #focus-screen { display: none; text-align: center; }
+        .timer { 
+            font-size: 4em; font-weight: bold; margin: 20px 0; 
+            color: #ff3366; text-shadow: 0 0 20px #ff3366; 
+        }
+        .btn-exit { background: transparent; border: 1px solid var(--text-color); color: var(--text-color); margin-top: 20px;}
     </style>
 </head>
 <body>
 
     <div class="stats" id="stats">
-        <span>☀️ Nắng: <span id="sun-count">0</span></span>
+        <span>☀️ Nắng (Vàng): <span id="sun-count">0</span></span>
         <span>🎒 Hố đen: <span id="task-count">0</span></span>
     </div>
 
     <div class="container" id="main-container">
-        <div class="sunbeam"></div>
+        
+        <!-- Màn hình chính -->
         <div id="default-screen">
-            <h2>Phòng Ngập Nắng 🛋️</h2>
-            
+            <h2>Căn Phòng Ngập Nắng ☕</h2>
             <div class="input-group">
-                <input type="text" id="task-input" placeholder="Gõ vội ý tưởng / Task vào đây (Enter)...">
-                <button onclick="addTask()">Ném</button>
+                <input type="text" id="task-input" placeholder="Ném task / ý tưởng vào đây...">
+                <button onclick="addTask()">Tạo</button>
             </div>
-
-            <ul class="task-list" id="task-list">
-                <!-- Task sẽ hiện ở đây -->
-            </ul>
+            <ul class="task-list" id="task-list"></ul>
         </div>
 
+        <!-- Màn hình Focus / Đếm ngược -->
         <div id="focus-screen">
-            <h2>⚡ ĐỘ KIẾP ⚡</h2>
-            <p>Đang tập trung diệt Tâm Ma:</p>
-            <h3 id="focus-task-name" style="font-size: 1.5em; border-bottom: 2px dashed var(--accent); padding-bottom: 10px;">Tên Task</h3>
-            <div class="timer">15:00</div>
-            <button onclick="finishTask()">Chém Xong! (+2 ☀️)</button>
-            <br><br>
-            <button class="btn-exit" onclick="exitFocus()">Bỏ chạy (Thoát)</button>
+            <h2 style="color: #00ffcc;">⚡ TỤ KHÍ ĐỘ KIẾP ⚡</h2>
+            <p>Mục tiêu duy nhất hiện tại:</p>
+            <h3 id="focus-task-name" style="font-size: 1.5em;">Tên Task</h3>
+            
+            <div class="timer" id="countdown-display">15:00</div>
+            
+            <button onclick="finishTask()" style="background: #27ae60; box-shadow: 0 0 15px #27ae60;">
+                Trảm Yêu Xong! (+2 ☀️)
+            </button>
+            <br>
+            <button class="btn-exit" onclick="exitFocus()">Tẩu thoát (Hủy)</button>
         </div>
     </div>
 
     <script>
-        let tasks = [];
+        let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
         let sunCount = parseInt(localStorage.getItem('sunCount')) || 0;
-        document.getElementById('sun-count').innerText = sunCount;
+        
+        let timerInterval;
+        let timeLeft = 15 * 60; // 15 phút tính bằng giây
+        let currentFocusIndex = -1;
 
-        const taskInput = document.getElementById('task-input');
-        taskInput.addEventListener('keypress', function(e) {
+        // Khởi tạo giao diện ban đầu
+        document.getElementById('sun-count').innerText = sunCount;
+        renderTasks();
+
+        // Thêm task bằng phím Enter
+        document.getElementById('task-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') addTask();
         });
 
         function addTask() {
-            const val = taskInput.value.trim();
+            const val = document.getElementById('task-input').value.trim();
             if(!val) return;
             tasks.push(val);
-            taskInput.value = '';
+            saveData();
+            document.getElementById('task-input').value = '';
             renderTasks();
         }
 
@@ -157,39 +168,72 @@
                 const li = document.createElement('li');
                 li.className = 'task-item';
                 li.innerHTML = `
-                    <span>${task}</span>
+                    <span style="flex:1;">${task}</span>
                     <button class="btn-tutien" onclick="enterFocus(${index})">Độ Kiếp ⚡</button>
                 `;
                 list.appendChild(li);
             });
         }
 
-        let currentFocusIndex = -1;
+        // Bắt đầu đếm ngược
         function enterFocus(index) {
             currentFocusIndex = index;
             document.body.classList.add('tu-tien-mode');
             document.getElementById('default-screen').style.display = 'none';
             document.getElementById('focus-screen').style.display = 'block';
             document.getElementById('focus-task-name').innerText = tasks[index];
-            document.getElementById('stats').style.display = 'none';
+            
+            // Thiết lập lại thời gian 15 phút
+            timeLeft = 15 * 60;
+            updateDisplay();
+            
+            // Chạy hàm đếm lùi mỗi 1 giây (1000ms)
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateDisplay();
+                
+                if(timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Đột phá cảnh giới thành công! Bạn nhận được +2 Vàng.');
+                    finishTask();
+                }
+            }, 1000);
         }
 
+        // Thoát chế độ tập trung
         function exitFocus() {
+            clearInterval(timerInterval);
             document.body.classList.remove('tu-tien-mode');
             document.getElementById('default-screen').style.display = 'block';
             document.getElementById('focus-screen').style.display = 'none';
-            document.getElementById('stats').style.display = 'flex';
         }
 
+        // Hoàn thành task
         function finishTask() {
             if(currentFocusIndex > -1) {
                 tasks.splice(currentFocusIndex, 1);
                 sunCount += 2;
-                localStorage.setItem('sunCount', sunCount);
+                saveData();
                 document.getElementById('sun-count').innerText = sunCount;
             }
             exitFocus();
             renderTasks();
+        }
+
+        // Cập nhật số hiển thị trên đồng hồ
+        function updateDisplay() {
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            m = m < 10 ? "0" + m : m;
+            s = s < 10 ? "0" + s : s;
+            document.getElementById('countdown-display').innerText = `${m}:${s}`;
+        }
+
+        // Lưu vào bộ nhớ trình duyệt
+        function saveData() {
+            localStorage.setItem('myTasks', JSON.stringify(tasks));
+            localStorage.setItem('sunCount', sunCount);
         }
     </script>
 </body>
